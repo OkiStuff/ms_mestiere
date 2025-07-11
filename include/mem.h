@@ -12,7 +12,7 @@
 #endif
 
 #ifndef MS_FREE
-    #define MS_FREE(ptr) MZ_FREE(PTR)
+    #define MS_FREE(ptr) MZ_FREE(ptr)
 #endif
 
 #ifndef MS_REALLOC

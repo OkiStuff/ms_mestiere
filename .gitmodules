@@ -1,0 +1,3 @@
+[submodule "deps/prova"]
+	path = deps/prova
+	url = https://github.com/okistuff/prova.git

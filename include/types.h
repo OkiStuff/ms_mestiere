@@ -7,6 +7,7 @@
 #define TRUE 1
 
 typedef void* pointer_t;
+typedef const char* string_t;
 typedef uint8_t bool_t;
 
 #endif // MESTIERE_TYPES_H
