@@ -1,3 +1,6 @@
 [submodule "deps/prova"]
 	path = deps/prova
 	url = https://github.com/okistuff/prova.git
+[submodule "deps/FastNoiseLite"]
+	path = deps/FastNoiseLite
+	url = https://github.com/Auburn/FastNoiseLite.git
