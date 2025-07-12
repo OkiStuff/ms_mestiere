@@ -1,6 +1,7 @@
 #include "map.h"
 #include "function.h"
 #include "types.h"
+#include "scene.h"
 
 void map_free(map_generic_t* map)
 {
@@ -160,7 +161,7 @@ bool_t MAP_FUNC(K,V,remove)(MAP(K,V)* map, K key, V* old_value_out)\
 	}\
 	return FALSE;\
 }\
-void MAP_FUNC(K,V,foreach)(MAP(K,V)* map, biconsumer_int_pointer_t_func_t callback)\
+void MAP_FUNC(K,V,foreach)(MAP(K,V)* map, void* dataptr, TRICONSUMER(pointer_t, K, pointer_t) callback)\
 {\
 	/* TODO: If we ever need foreach more often, it may be work while to\
 	 * add some sort of array that tracks the current existing\
@@ -170,7 +171,7 @@ void MAP_FUNC(K,V,foreach)(MAP(K,V)* map, biconsumer_int_pointer_t_func_t callba
 	{\
 		if (map->data[i].occupied)\
 		{\
-			callback(map->data[i].key, &map->data[i].value);\
+			callback(dataptr, map->data[i].key, &map->data[i].value);\
 			entries_found++;\
 		}\
 	}\
@@ -219,6 +220,10 @@ bool_t map_##K##_compare_key(K a, K b) \
 
 IMPLEMENT_SIMPLE_COMPARE_KEY(int)
 
+// map.h
 IMPLEMENT_MAP(int, pointer_t)
 IMPLEMENT_MAP(int, int)
 IMPLEMENT_MAP(int, mz_vec2)
+
+// scene.h
+IMPLEMENT_MAP(int, scene_t)

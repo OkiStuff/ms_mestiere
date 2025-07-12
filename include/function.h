@@ -20,4 +20,10 @@ DEFINE_BICONSUMER(int, pointer_t);
 DEFINE_BICONSUMER(int, int);
 DEFINE_BICONSUMER(char, char);
 
+// Triconsumers
+#define TRICONSUMER(T,U,V) triconsumer_##T##_##U##_##V##_func_t
+#define DEFINE_TRICONSUMER(T,U,V) typedef void (*TRICONSUMER(T,U,V))(T,U,V)
+
+DEFINE_TRICONSUMER(pointer_t, int, pointer_t);
+
 #endif // MESTIERE_FUNCTION_H

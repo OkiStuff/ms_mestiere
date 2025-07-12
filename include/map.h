@@ -55,7 +55,7 @@ typedef struct MAP(K,V) \
 	V* (*get)(struct MAP(K,V)*, K);\
 	V* (*get_or_default)(struct MAP(K,V)*, K, V*);\
 	bool_t (*remove)(struct MAP(K,V)*, K, V*);\
-	void (*foreach)(struct MAP(K,V)*, biconsumer_int_pointer_t_func_t);\
+	void (*foreach)(struct MAP(K,V)*, void*, TRICONSUMER(pointer_t, K, pointer_t));\
 	bool_t (*compare_key)(K, K);\
 } MAP(K,V);\
 bool_t MAP_FUNC(K,V,put)(MAP(K,V)*, K, V, V*);\
@@ -63,7 +63,7 @@ bool_t MAP_FUNC(K,V,contains)(MAP(K,V)*, K);\
 V* MAP_FUNC(K,V,get)(MAP(K,V)*, K);\
 V* MAP_FUNC(K,V,get_or_default)(MAP(K,V)*, K, V*);\
 bool_t MAP_FUNC(K,V,remove)(MAP(K,V)*, K, V*);\
-void MAP_FUNC(K,V,foreach)(MAP(K,V)*, biconsumer_int_pointer_t_func_t);\
+void MAP_FUNC(K,V,foreach)(MAP(K,V)*, void*, TRICONSUMER(pointer_t, K, pointer_t));\
 void MAP_FUNC(K,V,init_with_capacity)(MAP(K,V)*, size_t);\
 void MAP_FUNC(K,V,init)(MAP(K,V)*);\
 void MAP_FUNC(K,V,init_with_capacity_and_hash)(MAP(K,V)*, MAP_HASH_FUNC_TYPE(K), size_t);\

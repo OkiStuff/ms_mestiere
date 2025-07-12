@@ -131,6 +131,32 @@ PV_TEST(free_test)
 	PV_RETURN_SUCCESS;
 }
 
+PV_TEST(hash_test)
+{
+	PV_REGISTRY;
+	PV_DESCRIPTION("Test hash functions");
+
+	uint64_t int_hash1 = map_hash_int(1);
+	uint64_t int_hash2 = map_hash_int(1);
+	PV_EXPECT_EQ(int_hash1, int_hash2);
+
+	uint64_t double_hash1 = map_hash_double(1.5);
+	uint64_t double_hash2 = map_hash_double(1.5);
+	PV_EXPECT_EQ(double_hash1, double_hash2);
+
+	int a = 9;
+	uint64_t pointer_hash1 = map_hash_pointer_t(&a);
+	uint64_t pointer_hash2 = map_hash_pointer_t(&a);
+	PV_EXPECT_EQ(pointer_hash1, pointer_hash2);
+
+	const char* b = "Hello, World\n";
+	uint64_t string_hash1 = map_hash_string_t(b);
+	uint64_t string_hash2 = map_hash_string_t(b);
+	PV_EXPECT_EQ(string_hash1, string_hash2);
+
+	PV_RETURN_SUCCESS;
+}
+
 PV_TEST(put_test)
 {
 	PV_REGISTRY;
@@ -222,14 +248,18 @@ PV_TEST(remove_test)
 	PV_RETURN_SUCCESS;
 }
 
-static bool_t foreach_good = TRUE;
-static int foreach_amount = 0;
-
-static void foreach_biconsumer(int key, void* value)
+struct foreach_test_data
 {
+	bool_t good;
+	int iterations;
+};
+
+static void foreach_biconsumer(void* dataptr, int key, void* value)
+{
+	struct foreach_test_data* data = (struct foreach_test_data*)(dataptr);
 	int* v = (int*)(value);
-	foreach_good = v != NULL && ((key == 5 && *v == 10) || (key == 6 && *v == 12));
-	foreach_amount++;
+	data->good = v != NULL && ((key == 5 && *v == 10) || (key == 6 && *v == 12));
+	data->iterations++;
 }
 
 PV_TEST(foreach_test)
@@ -237,18 +267,17 @@ PV_TEST(foreach_test)
 	PV_REGISTRY;
 	PV_DESCRIPTION("Test hashmap foreach");
 
-	foreach_good = TRUE;
-	foreach_amount = 0;
+	struct foreach_test_data data = (struct foreach_test_data){0};
 
 	MAP(int, int) map;
 	MAP_INIT(int, int, &map);
 
 	map.put(&map, 5, 10, NULL);
 	map.put(&map, 6, 12, NULL);
-	map.foreach(&map, foreach_biconsumer);
+	map.foreach(&map, &data, foreach_biconsumer);
 
-	PV_EXPECT_EQ(foreach_good, TRUE);
-	PV_EXPECT_EQ(foreach_amount, 2);
+	PV_EXPECT_EQ(data.good, TRUE);
+	PV_EXPECT_EQ(data.iterations, 2);
 	PV_RETURN_SUCCESS;
 }
 
@@ -258,6 +287,7 @@ PV_TEST_SUITE(map_tests, "Hashmap Tests", PV_DEFAULT_CONFIG,
               init_with_hash_test,
               init_with_capacity_and_hash_test,
               free_test,
+              hash_test,
               put_test,
               get_test,
               remove_test,

@@ -1,25 +1,25 @@
 #include <Muzzle.h>
 #include <stdio.h>
-#include <mem.h>
+#include "mem.h"
+#include "application.h"
+
+#include "scenes/game_scene.h"
 
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
 
-void applet_loop(mz_applet* applet)
+static void init_scenes(application_t* app)
 {
-    while (mz_keep_applet(applet))
-    {
-        mz_begin_drawing(applet);
-            mz_clear_screen(TINT_GRAY);
-        mz_end_drawing(applet);
-    }
+    scene_manager_add_scene(&app->scene_manager, SCENE(game_scene, GAME_SCENE_ID));
 }
 
 int main(void)
 {
-    mz_applet applet = mz_initialize_applet("My Muzzle App", SCREEN_WIDTH, SCREEN_HEIGHT, APPLET_FLAG_RESIZBALE | APPLET_FLAG_VSYNC | APPLET_FLAG_TRACK_DELTA_TIME);
-    mz_start_applet(&applet, applet_loop);
-
-    mz_terminate_applet(&applet);
+    application_t app = application_init("My Muzzle App", SCREEN_WIDTH, SCREEN_HEIGHT, APPLET_FLAG_VSYNC | APPLET_FLAG_TRACK_DELTA_TIME);
+    init_scenes(&app);
+    application_start(&app);
+    application_terminate(&app);
+    application_unload(&app);
+    
     return 0;
 }

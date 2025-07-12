@@ -22,8 +22,15 @@ link_directories(${MUZZLE_ROOT}/lib ${MUZZLE_DEPS_FOLDER}/glfw/lib ${FREETYPE}/l
 set(source_dir src)
 set(tests_dir tests)
 
+set(scene_source
+${source_dir}/scenes/game_scene.c
+)
+
 set(source
 ${source_dir}/map.c
+${source_dir}/scene.c
+${source_dir}/application.c
+${scene_source}
 )
 
 add_executable(${target_name} ${source_dir}/main.c ${source})
